@@ -12,9 +12,11 @@ Model Machine Learning (GLCM + SVM) untuk mendeteksi apakah terong atau tomat da
 - api/ → FastAPI backend
 
 ## Cara Menjalankan
-1. Install dependency:
+1. Install dependency:<br>
 pip install -r requirements.txt
-2. Jalankan API:
-uvicorn api.main:app --reload
-3. Test API dengan upload gambar ke:
+2. Jalankan API:<br>
+uvicorn api.main:app --reload  <br>
+atau <br>
+py -m uvicorn api.main:app --reload
+3. Test API dengan upload gambar ke:<br>
 POST http://localhost:8000/predict
