@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual env
+venv/
+env/
+
+# Model files
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.onnx
+
+# Dataset
+datasets/
+data/
+raw/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# FastAPI uploads
+uploads/
+media/
+
+# Environment
+.env
+*.log
