@@ -190,12 +190,6 @@ docker run --rm -p 8000:8000 \
 
 Atur origin yang diizinkan via env `ALLOWED_ORIGINS` (dipisah koma). Default `*`.
 
-### MODE Warna (HSV)
-
-Gunakan env `COLOR_MODE`:
-- `strict` (default): konversi warna yang benar (BGR→RGB→HSV). Gunakan ini setelah retrain.
-- `compat`: meniru perilaku notebook lama (legacy). Hanya untuk backward compatibility.
-
 ### Contoh `curl` prediksi
 
 ```bash
@@ -218,20 +212,7 @@ python -m scripts.smoke_test data/raw/bersih/sample.jpg
 python -m scripts.smoke_test data/raw/bersih/sample.jpg --color-mode strict
 ```
 
-### Konsumsi dari Flutter
-
-Gunakan `dio`/`http` untuk multipart upload ke `POST /predict`. Pastikan base URL mengarah ke deployment API.
-
 ---
-
-## 🚀 Deployment
-
-Lihat panduan lengkap di **[DEPLOYMENT.md](DEPLOYMENT.md)** untuk:
-- Railway (gratis, auto-deploy, no spin-down)
-- Render (gratis dengan spin-down)
-- VPS + Docker + Nginx/HTTPS
-- GitHub Actions CI/CD workflow
-- Flutter integration examples
 
 ## 📈 Visualisasi
 
