@@ -46,6 +46,11 @@ IDX_TO_LABEL = {0: "bersih", 1: "kotor"}
 COLOR_MODE = os.getenv("COLOR_MODE", "strict").strip().lower()
 
 
+@app.get("/")
+def root():
+    return {"status": "ok", "service": "Vegetable Cleanliness API", "version": "1.0.0"}
+
+
 @app.get("/healthz")
 def healthz():
     return {"status": "ok"}
