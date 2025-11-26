@@ -151,6 +151,88 @@ confidence = pred_proba[pred_label] * 100
 print(f'Prediksi: {result} ({confidence:.2f}%)')
 ```
 
+## 🌐 API Deployment (FastAPI)
+
+Service API disediakan di folder `app/` dengan endpoint utama:
+
+- `GET /healthz` — cek kesehatan service
+- `POST /predict` — unggah file gambar (`form-data` field: `file`)
+
+Contoh respons:
+```json
+{
+  "label": "bersih",
+  "confidence": 0.97,
+  "probabilities": {"bersih": 0.97, "kotor": 0.03}
+}
+```
+
+### Menjalankan Secara Lokal
+
+```bash
+python -m venv .venv
+source .venv/bin/activate   # Windows Git Bash: source .venv/Scripts/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+### Docker
+
+```bash
+docker build -t vegetable-cleanliness-api:latest .
+docker run --rm -p 8000:8000 \
+  -e ALLOWED_ORIGINS='*' \
+  -e COLOR_MODE='strict' \
+  vegetable-cleanliness-api:latest
+```
+
+### CORS
+
+Atur origin yang diizinkan via env `ALLOWED_ORIGINS` (dipisah koma). Default `*`.
+
+### MODE Warna (HSV)
+
+Gunakan env `COLOR_MODE`:
+- `strict` (default): konversi warna yang benar (BGR→RGB→HSV). Gunakan ini setelah retrain.
+- `compat`: meniru perilaku notebook lama (legacy). Hanya untuk backward compatibility.
+
+### Contoh `curl` prediksi
+
+```bash
+curl -X POST \
+  -F "file=@data/raw/bersih/sample.jpg" \
+  http://localhost:8000/predict
+```
+
+Endpoint debug (fitur + probabilitas mentah):
+```bash
+curl -X POST -F "file=@data/raw/bersih/sample.jpg" http://localhost:8000/predict-debug
+```
+
+### Smoke test tanpa server
+
+```bash
+# Jalankan sebagai module agar import app.* bekerja
+python -m scripts.smoke_test data/raw/bersih/sample.jpg
+# atau eksplisit color mode:
+python -m scripts.smoke_test data/raw/bersih/sample.jpg --color-mode strict
+```
+
+### Konsumsi dari Flutter
+
+Gunakan `dio`/`http` untuk multipart upload ke `POST /predict`. Pastikan base URL mengarah ke deployment API.
+
+---
+
+## 🚀 Deployment
+
+Lihat panduan lengkap di **[DEPLOYMENT.md](DEPLOYMENT.md)** untuk:
+- Railway (gratis, auto-deploy, no spin-down)
+- Render (gratis dengan spin-down)
+- VPS + Docker + Nginx/HTTPS
+- GitHub Actions CI/CD workflow
+- Flutter integration examples
+
 ## 📈 Visualisasi
 
 Notebook menyediakan visualisasi untuk:

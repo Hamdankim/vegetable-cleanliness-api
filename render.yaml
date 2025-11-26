@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: vegetable-cleanliness-api
+    env: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: COLOR_MODE
+        value: strict
+      - key: ALLOWED_ORIGINS
+        value: "*"
+    healthCheckPath: /healthz
+    autoDeploy: true

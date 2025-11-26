@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.DS_Store
+data/
+PCVK_Kelompok3.ipynb
+README_images/
+*.ipynb_checkpoints/
