@@ -3,6 +3,30 @@ import numpy as np
 from skimage.feature import graycomatrix, graycoprops
 
 
+def preprocess_image(img: np.ndarray, size=(256, 256), blur='gaussian', ksize=3) -> np.ndarray:
+    """
+    Preprocessing sesuai training pipeline:
+    1. Blur (gaussian/median/mean)
+    2. Resize
+    3. Normalize (0-1)
+    """
+    # 1. BLUR
+    if blur == 'gaussian':
+        img = cv2.GaussianBlur(img, (ksize, ksize), 0)
+    elif blur == 'median':
+        img = cv2.medianBlur(img, ksize)
+    elif blur == 'mean':
+        img = cv2.blur(img, (ksize, ksize))
+    
+    # 2. RESIZE
+    img = cv2.resize(img, size, interpolation=cv2.INTER_AREA)
+    
+    # 3. NORMALIZE (0-1)
+    img = img.astype(np.float32) / 255.0
+    
+    return img
+
+
 def grabcut_segment(img: np.ndarray):
     mask = np.zeros(img.shape[:2], np.uint8)
     bgModel = np.zeros((1, 65), np.float64)
@@ -59,9 +83,19 @@ def extract_glcm(img_gray: np.ndarray):
 
 
 def build_features(bgr_img: np.ndarray, color_mode: str = "strict") -> np.ndarray:
-    seg, _ = grabcut_segment(bgr_img)
+    # 1. PREPROCESSING (blur + resize + normalize) - SAMA SEPERTI TRAINING
+    preprocessed = preprocess_image(bgr_img, size=(256, 256), blur='gaussian', ksize=3)
+    
+    # Convert back to uint8 for segmentation (0-255)
+    img_uint8 = (preprocessed * 255).astype(np.uint8)
+    
+    # 2. SEGMENTATION
+    seg, _ = grabcut_segment(img_uint8)
+    
+    # 3. FEATURE EXTRACTION
     color_feats = extract_color_features(seg, color_mode=color_mode)
     gray = cv2.cvtColor(seg, cv2.COLOR_BGR2GRAY)
     glcm_feats = extract_glcm(gray)
+    
     feats = list(color_feats.values()) + list(glcm_feats.values())
     return np.array(feats, dtype=np.float32).reshape(1, -1)
