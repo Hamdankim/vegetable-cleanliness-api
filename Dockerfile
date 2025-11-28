@@ -24,5 +24,5 @@ ENV PORT=8000
 
 EXPOSE 8000
 
-# Use $PORT from Railway, bind to 0.0.0.0
-CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Use $PORT from Railway, bind to 0.0.0.0, limit to 1 worker to prevent memory overflow
+CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1
